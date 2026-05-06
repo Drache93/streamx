@@ -350,8 +350,9 @@ class ReadableState {
 
     if ((stream._duplexState & READ_STATUS) === READ_QUEUED) {
       const data = this.shift()
-      if (this.pipeTo !== null && this.pipeTo.write(data) === false)
+      if (this.pipeTo !== null && this.pipeTo.write(data) === false) {
         stream._duplexState &= READ_PIPE_NOT_DRAINED
+      }
       if ((stream._duplexState & READ_EMIT_DATA) !== 0) stream.emit('data', data)
       return data
     }
@@ -372,8 +373,9 @@ class ReadableState {
       (stream._duplexState & READ_FLOWING) !== 0
     ) {
       const data = this.shift()
-      if (this.pipeTo !== null && this.pipeTo.write(data) === false)
+      if (this.pipeTo !== null && this.pipeTo.write(data) === false) {
         stream._duplexState &= READ_PIPE_NOT_DRAINED
+      }
       if ((stream._duplexState & READ_EMIT_DATA) !== 0) stream.emit('data', data)
     }
   }
@@ -568,8 +570,9 @@ function afterWrite(err) {
 function afterRead(err) {
   if (err) this.stream.destroy(err)
   this.stream._duplexState &= READ_NOT_ACTIVE
-  if (this.readAhead === false && (this.stream._duplexState & READ_RESUMED) === 0)
+  if (this.readAhead === false && (this.stream._duplexState & READ_RESUMED) === 0) {
     this.stream._duplexState &= READ_NO_READ_AHEAD
+  }
   this.updateCallback()
 }
 
