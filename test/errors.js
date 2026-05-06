@@ -1,7 +1,7 @@
 const test = require('brittle')
 const StreamError = require('../lib/errors')
 
-test('can make errors', async function (t) {
+test('can make errors', function (t) {
   {
     const err = StreamError.STREAM_DESTROYED()
 
@@ -24,5 +24,21 @@ test('can make errors', async function (t) {
     t.is(err.code, 'ABORTED')
     t.is(err.message, 'Stream aborted')
     t.ok(StreamError.isAborted(err))
+  }
+
+  {
+    const err = StreamError.PIPE_USED()
+
+    t.is(err.code, 'PIPE_USED')
+    t.is(err.message, 'Can only pipe to one destination')
+    t.ok(StreamError.isPipeUsed(err))
+  }
+
+  {
+    const err = StreamError.PIPELINE_MISSING()
+
+    t.is(err.code, 'PIPELINE_MISSING')
+    t.is(err.message, 'Pipeline requires at least 2 streams')
+    t.ok(StreamError.isPipelineMissing(err))
   }
 })
