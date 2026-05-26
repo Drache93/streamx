@@ -790,22 +790,16 @@ class Readable extends Stream {
     }
   }
 
-  static DeferredStream(stream, opts) {
+  static Deferred(fn, opts) {
     const out = new PassThrough(opts)
 
-    let piped = false
-
-    stream.on('data', (src) => {
-      piped = true
-      if (out.destroying) return
-      pipeline(src, out, noop)
-    })
-
-    stream.on('end', () => {
-      if (!piped) out.end()
-    })
-
-    stream.on('error', (err) => out.destroy(err))
+    fn()
+      .then((src) => {
+        if (src === null) return out.end()
+        if (out.destroying) return
+        pipeline(src, out, noop)
+      })
+      .catch((err) => out.destroy(err))
 
     return out
   }
