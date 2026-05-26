@@ -790,6 +790,26 @@ class Readable extends Stream {
     }
   }
 
+  static DeferredStream(stream, opts) {
+    const out = new PassThrough(opts)
+
+    let piped = false
+
+    stream.on('data', (src) => {
+      piped = true
+      if (out.destroying) return
+      pipeline(src, out, noop)
+    })
+
+    stream.on('end', () => {
+      if (!piped) out.end()
+    })
+
+    stream.on('error', (err) => out.destroy(err))
+
+    return out
+  }
+
   setEncoding(encoding) {
     const dec = new TextDecoder(encoding)
     const map = this._readableState.map || echo

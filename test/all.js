@@ -11,6 +11,7 @@ async function runTests() {
   await import('./backpressure.js')
   await import('./byte-length.js')
   await import('./compat.js')
+  await import('./deferred-stream.js')
   await import('./destroy.js')
   await import('./duplex.js')
   await import('./errors.js')
