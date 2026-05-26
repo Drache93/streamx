@@ -790,7 +790,7 @@ class Readable extends Stream {
     }
   }
 
-  static Deferred(fn, opts) {
+  static deferred(fn, opts) {
     const out = new PassThrough(opts)
 
     fn()
